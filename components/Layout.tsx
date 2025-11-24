@@ -16,9 +16,12 @@ interface LayoutProps {
   children: React.ReactNode;
   activeTab: string;
   onTabChange: (tab: string) => void;
+  onLogout?: () => void;
+  userName?: string;
+  userRole?: string;
 }
 
-export const Layout: React.FC<LayoutProps> = ({ children, activeTab, onTabChange }) => {
+export const Layout: React.FC<LayoutProps> = ({ children, activeTab, onTabChange, onLogout, userName, userRole }) => {
   const [isSidebarOpen, setSidebarOpen] = useState(false);
 
   const navItems = [
@@ -76,13 +79,25 @@ export const Layout: React.FC<LayoutProps> = ({ children, activeTab, onTabChange
           ))}
         </nav>
 
-        <div className="absolute bottom-0 w-full p-4 border-t border-slate-700 bg-slate-900">
+        <div className="absolute bottom-0 w-full p-4 border-t border-slate-700 bg-slate-900 space-y-2">
           <div className="flex items-center justify-between text-slate-400 hover:text-white cursor-pointer px-4 py-2">
-             <div className="flex items-center">
-                <Settings size={18} className="mr-2" />
-                <span>Settings</span>
-             </div>
+            <div className="flex items-center">
+              <Settings size={18} className="mr-2" />
+              <span>Settings</span>
+            </div>
           </div>
+          <button
+            type="button"
+            onClick={onLogout}
+            disabled={!onLogout}
+            className="w-full flex items-center justify-between text-slate-300 hover:text-white hover:bg-slate-800 px-4 py-2 rounded-lg disabled:opacity-60"
+          >
+            <span className="flex items-center">
+              <LogOut size={18} className="mr-2" />
+              Log out
+            </span>
+            <span className="text-xs bg-white/10 px-2 py-0.5 rounded-full">{userName ? userName.split(' ')[0] : 'User'}</span>
+          </button>
         </div>
       </aside>
 
@@ -104,11 +119,11 @@ export const Layout: React.FC<LayoutProps> = ({ children, activeTab, onTabChange
 
           <div className="flex items-center space-x-4">
             <div className="text-right hidden sm:block">
-              <p className="text-sm font-medium text-slate-900">Admin User</p>
-              <p className="text-xs text-slate-500">Manager</p>
+              <p className="text-sm font-medium text-slate-900">{userName ?? 'Admin User'}</p>
+              <p className="text-xs text-slate-500">{userRole ?? 'Manager'}</p>
             </div>
             <div className="h-10 w-10 bg-emerald-100 rounded-full flex items-center justify-center text-emerald-700 font-bold border-2 border-white shadow">
-              AD
+              {(userName ?? 'EVW').slice(0, 2).toUpperCase()}
             </div>
           </div>
         </header>

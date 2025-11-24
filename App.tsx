@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Layout } from './components/Layout';
 import { Dashboard } from './components/Dashboard';
 import { Inventory } from './components/Inventory';
@@ -9,10 +9,29 @@ import { Invoice } from './types';
 import { StorageService } from './services/storage';
 import { InvoiceView } from './components/InvoiceView';
 import { CustomerList } from './components/CustomerList';
+import { LoginScreen } from './components/Login';
 
 export default function App() {
+  const [user, setUser] = useState<{ name: string; email: string; role: string } | null>(null);
   const [activeTab, setActiveTab] = useState('dashboard');
   const [viewInvoice, setViewInvoice] = useState<Invoice | null>(null);
+
+  useEffect(() => {
+    const savedUser = localStorage.getItem('evw:user');
+    if (savedUser) {
+      setUser(JSON.parse(savedUser));
+    }
+  }, []);
+
+  const handleLogin = (profile: { name: string; email: string; role: string }) => {
+    setUser(profile);
+    localStorage.setItem('evw:user', JSON.stringify(profile));
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+    localStorage.removeItem('evw:user');
+  };
 
   const renderContent = () => {
     // If viewing a specific invoice details
@@ -76,8 +95,21 @@ export default function App() {
     }
   };
 
+  if (!user) {
+    return <LoginScreen onLogin={handleLogin} />;
+  }
+
   return (
-    <Layout activeTab={activeTab} onTabChange={(t) => { setActiveTab(t); setViewInvoice(null); }}>
+    <Layout
+      activeTab={activeTab}
+      onTabChange={(t) => {
+        setActiveTab(t);
+        setViewInvoice(null);
+      }}
+      onLogout={handleLogout}
+      userName={user.name}
+      userRole={user.role}
+    >
       {renderContent()}
     </Layout>
   );
