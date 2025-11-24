@@ -86,3 +86,45 @@ export type TeamMember = {
   authProvider: 'Google' | 'Email';
   lastLogin?: string;
 };
+
+export type BrandSettings = {
+  companyName: string;
+  tagline: string;
+  logoUrl: string;
+  brandColor: string;
+  accentColor: string;
+};
+
+export type BankingSettings = {
+  bankName: string;
+  accountTitle: string;
+  accountNumber: string;
+  iban?: string;
+};
+
+export type BackupSettings = {
+  dailyBackups: boolean;
+  retentionDays: number;
+  notifyEmail: string;
+};
+
+export type InvoicePreferences = {
+  showBankOnInvoice: boolean;
+  showQrOnInvoice: boolean;
+  whatsappFooter: string;
+};
+
+export type AdminSettings = {
+  brand: BrandSettings;
+  banking: BankingSettings;
+  backups: BackupSettings;
+  invoice: InvoicePreferences;
+};
+
+export type UserProfile = {
+  name: string;
+  email: string;
+  role: string;
+  provider: 'Google' | 'Email';
+  branch?: string;
+};

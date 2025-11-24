@@ -1,4 +1,4 @@
-import { Product, Customer, Expense, Invoice, TeamMember } from './types';
+import { Product, Customer, Expense, Invoice, TeamMember, AdminSettings } from './types';
 
 export const COMPANY_DETAILS = {
   name: 'EVW VAPE WHOLESALE',
@@ -125,6 +125,32 @@ export const INITIAL_TEAM: TeamMember[] = [
     authProvider: 'Google',
   },
 ];
+
+export const DEFAULT_ADMIN_SETTINGS: AdminSettings = {
+  brand: {
+    companyName: COMPANY_DETAILS.name,
+    tagline: 'ERP built for vape commerce in Pakistan and beyond',
+    logoUrl: COMPANY_DETAILS.logoPlaceholder,
+    brandColor: '#0f766e',
+    accentColor: '#34d399',
+  },
+  banking: {
+    bankName: COMPANY_DETAILS.bankDetails.bankName,
+    accountTitle: COMPANY_DETAILS.bankDetails.accountTitle,
+    accountNumber: COMPANY_DETAILS.bankDetails.accountNumber,
+    iban: 'PK99 EVWC 0000 1111 2222 3333',
+  },
+  backups: {
+    dailyBackups: true,
+    retentionDays: 15,
+    notifyEmail: 'ops@evw-pakistan.com',
+  },
+  invoice: {
+    showBankOnInvoice: true,
+    showQrOnInvoice: true,
+    whatsappFooter: 'Shared from EVW Cloud ERP · PKR ready · Vape industry focused',
+  },
+};
 
 export const CATEGORIES = ['E-Liquid', 'Nic Salt', 'Disposable', 'Device', 'Pod', 'Coil', 'Accessory'];
 export const BRANDS = ['VGod', 'Tokyo', 'Pod Salt', 'Juice Head', 'Skwezed', 'GeekVape', 'Vaporesso', 'Uwell'];

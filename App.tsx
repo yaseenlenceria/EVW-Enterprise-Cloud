@@ -11,22 +11,22 @@ import { InvoiceView, generateWhatsAppLink } from './components/InvoiceView';
 import { CustomerList } from './components/CustomerList';
 import { LoginScreen } from './components/Login';
 import { Team } from './components/Team';
+import { Settings } from './components/Settings';
+import { UserProfile } from './types';
 
 export default function App() {
-  const [user, setUser] = useState<{ name: string; email: string; role: string } | null>(null);
+  const [user, setUser] = useState<UserProfile | null>(null);
   const [activeTab, setActiveTab] = useState(() => localStorage.getItem('evw:activeTab') || 'dashboard');
   const [viewInvoice, setViewInvoice] = useState<Invoice | null>(null);
 
   useEffect(() => {
-    const savedUser = localStorage.getItem('evw:user');
-    if (savedUser) {
-      setUser(JSON.parse(savedUser));
-    }
+    const savedUser = StorageService.getUserProfile();
+    if (savedUser) setUser(savedUser);
   }, []);
 
-  const handleLogin = (profile: { name: string; email: string; role: string }) => {
+  const handleLogin = (profile: UserProfile) => {
     setUser(profile);
-    localStorage.setItem('evw:user', JSON.stringify(profile));
+    StorageService.saveUserProfile(profile);
   };
 
   useEffect(() => {
@@ -37,7 +37,7 @@ export default function App() {
 
   const handleLogout = () => {
     setUser(null);
-    localStorage.removeItem('evw:user');
+    StorageService.saveUserProfile(null);
   };
 
   const renderContent = () => {
@@ -58,6 +58,7 @@ export default function App() {
       case 'inventory': return <Inventory />;
       case 'pos': return <POS />;
       case 'customers': return <CustomerList />;
+      case 'settings': return <Settings user={user} />;
       case 'expenses': return <Expenses />;
       case 'users': return <Team />;
       case 'invoices': return (

@@ -2,20 +2,21 @@ import React from 'react';
 import { MessageCircle, Banknote, QrCode } from 'lucide-react';
 import { Invoice } from '../types';
 import { COMPANY_DETAILS } from '../constants';
+import { StorageService } from '../services/storage';
 
 // WhatsApp Share Helper
 export const generateWhatsAppLink = (invoice: Invoice) => {
   const text = [
-    `*INVOICE FROM ${COMPANY_DETAILS.name}*`,
+    `*INVOICE FROM ${StorageService.getSettings().brand.companyName || COMPANY_DETAILS.name}*`,
     `Invoice #: ${invoice.id}`,
     `Date: ${new Date(invoice.date).toLocaleDateString()}`,
     `Customer: ${invoice.customerName}`,
     `Total: Rs. ${invoice.total.toLocaleString()} (PKR)`,
     `Payment: ${invoice.paymentMethod}`,
     '',
-    `Bank: ${COMPANY_DETAILS.bankDetails.bankName}`,
-    `Title: ${COMPANY_DETAILS.bankDetails.accountTitle}`,
-    `AC#: ${COMPANY_DETAILS.bankDetails.accountNumber}`,
+    `Bank: ${StorageService.getSettings().banking.bankName}`,
+    `Title: ${StorageService.getSettings().banking.accountTitle}`,
+    `AC#: ${StorageService.getSettings().banking.accountNumber}`,
     '',
     'Thank you for choosing EVW.',
   ].join('\n');
@@ -24,15 +25,22 @@ export const generateWhatsAppLink = (invoice: Invoice) => {
 };
 
 export const InvoiceView: React.FC<{ invoice: Invoice }> = ({ invoice }) => {
+  const adminSettings = StorageService.getSettings();
+  const brandColor = adminSettings.brand.brandColor || '#0f766e';
   return (
     <div className="bg-white p-8 md:p-10 w-full text-slate-800 text-sm border border-emerald-50 shadow-2xl rounded-2xl">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-4 border-b border-slate-200 pb-6 mb-6">
         <div className="flex items-start gap-3">
-          <div className="h-12 w-12 rounded-xl bg-gradient-to-br from-emerald-500 to-teal-600 text-white font-black flex items-center justify-center text-lg shadow-lg">EV</div>
+          <div
+            className="h-12 w-12 rounded-xl text-white font-black flex items-center justify-center text-lg shadow-lg"
+            style={{ background: brandColor }}
+          >
+            EV
+          </div>
           <div>
             <p className="text-xs font-semibold text-emerald-600 uppercase">EVW Enterprise Cloud</p>
-            <h1 className="text-2xl font-bold text-slate-900">{COMPANY_DETAILS.name}</h1>
+            <h1 className="text-2xl font-bold text-slate-900">{adminSettings.brand.companyName || COMPANY_DETAILS.name}</h1>
             <p className="text-slate-500 text-xs mt-1">{COMPANY_DETAILS.address}</p>
             <p className="text-slate-500 text-xs">{COMPANY_DETAILS.phone} · {COMPANY_DETAILS.email}</p>
           </div>
@@ -61,20 +69,22 @@ export const InvoiceView: React.FC<{ invoice: Invoice }> = ({ invoice }) => {
           <p className="font-bold text-lg">{invoice.customerName}</p>
           <p className="text-slate-500 text-sm">PKR pricing · Vape industry ready</p>
         </div>
-        <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 flex items-center gap-3">
-          <QrCode className="text-emerald-500" />
-          <div>
-            <p className="text-xs text-slate-500">WhatsApp ready</p>
-            <a
-              href={generateWhatsAppLink(invoice)}
-              target="_blank"
-              rel="noreferrer"
-              className="text-emerald-700 font-semibold text-sm inline-flex items-center gap-1"
-            >
-              <MessageCircle size={14} /> Share invoice
-            </a>
+        {adminSettings.invoice.showQrOnInvoice && (
+          <div className="bg-slate-50 border border-slate-200 rounded-xl p-4 flex items-center gap-3">
+            <QrCode className="text-emerald-500" />
+            <div>
+              <p className="text-xs text-slate-500">WhatsApp ready</p>
+              <a
+                href={generateWhatsAppLink(invoice)}
+                target="_blank"
+                rel="noreferrer"
+                className="text-emerald-700 font-semibold text-sm inline-flex items-center gap-1"
+              >
+                <MessageCircle size={14} /> Share invoice
+              </a>
+            </div>
           </div>
-        </div>
+        )}
       </div>
 
       {/* Table */}
@@ -104,13 +114,18 @@ export const InvoiceView: React.FC<{ invoice: Invoice }> = ({ invoice }) => {
 
       {/* Footer / Totals */}
       <div className="flex flex-col md:flex-row justify-between items-start gap-6">
-         <div className="md:w-1/2">
-            <h4 className="font-bold text-slate-700 mb-2">Payment Details</h4>
-            <div className="text-xs text-slate-500 space-y-1">
-               <p>Bank: {COMPANY_DETAILS.bankDetails.bankName}</p>
-               <p>Title: {COMPANY_DETAILS.bankDetails.accountTitle}</p>
-               <p>AC#: {COMPANY_DETAILS.bankDetails.accountNumber}</p>
-            </div>
+         <div className="md:w-1/2 space-y-3">
+            {adminSettings.invoice.showBankOnInvoice && (
+              <div>
+                <h4 className="font-bold text-slate-700 mb-2">Payment Details</h4>
+                <div className="text-xs text-slate-500 space-y-1">
+                  <p>Bank: {adminSettings.banking.bankName}</p>
+                  <p>Title: {adminSettings.banking.accountTitle}</p>
+                  <p>AC#: {adminSettings.banking.accountNumber}</p>
+                  {adminSettings.banking.iban && <p>IBAN: {adminSettings.banking.iban}</p>}
+                </div>
+              </div>
+            )}
 
             <div className="mt-4 flex flex-wrap gap-2 print:hidden">
               <a
@@ -150,7 +165,7 @@ export const InvoiceView: React.FC<{ invoice: Invoice }> = ({ invoice }) => {
 
       <div className="mt-12 pt-6 border-t border-slate-100 text-center text-xs text-slate-500">
          <p className="font-semibold text-slate-700">Thank you for choosing EVW.</p>
-         <p>EVW-branded invoice · PKR ready · WhatsApp share built-in</p>
+         <p>{adminSettings.invoice.whatsappFooter}</p>
       </div>
     </div>
   );

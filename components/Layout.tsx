@@ -8,9 +8,9 @@ import {
   PieChart,
   Menu,
   X,
-  Settings,
   LogOut,
   UserPlus,
+  SlidersHorizontal,
 } from 'lucide-react';
 
 interface LayoutProps {
@@ -33,6 +33,7 @@ export const Layout: React.FC<LayoutProps> = ({ children, activeTab, onTabChange
     { id: 'invoices', label: 'Invoices', icon: FileText },
     { id: 'customers', label: 'Customers', icon: Users },
     { id: 'expenses', label: 'Expenses', icon: PieChart },
+    { id: 'settings', label: 'Settings', icon: SlidersHorizontal },
   ];
 
   return (
@@ -82,12 +83,24 @@ export const Layout: React.FC<LayoutProps> = ({ children, activeTab, onTabChange
         </nav>
 
         <div className="absolute bottom-0 w-full p-4 border-t border-slate-700 bg-slate-900 space-y-2">
-          <div className="flex items-center justify-between text-slate-400 hover:text-white cursor-pointer px-4 py-2">
-            <div className="flex items-center">
-              <Settings size={18} className="mr-2" />
-              <span>Settings</span>
-            </div>
-          </div>
+          <button
+            type="button"
+            onClick={() => {
+              onTabChange('settings');
+              setSidebarOpen(false);
+            }}
+            className={`flex items-center justify-between w-full px-4 py-2 rounded-lg transition ${
+              activeTab === 'settings'
+                ? 'bg-emerald-600 text-white shadow-lg'
+                : 'text-slate-300 hover:text-white hover:bg-slate-800'
+            }`}
+          >
+            <span className="flex items-center">
+              <SlidersHorizontal size={18} className="mr-2" />
+              Settings
+            </span>
+            <span className="text-[10px] uppercase tracking-wide">Admin</span>
+          </button>
           <button
             type="button"
             onClick={onLogout}

@@ -24,6 +24,14 @@ export const Team: React.FC = () => {
   });
 
   const activeCount = useMemo(() => team.filter((m) => m.status === 'Active').length, [team]);
+  const invitedCount = useMemo(() => team.filter((m) => m.status === 'Invited').length, [team]);
+  const googleUsers = useMemo(() => team.filter((m) => m.authProvider === 'Google').length, [team]);
+
+  const broadcastText = useMemo(
+    () =>
+      `EVW Cloud access updated. Active ${activeCount}, Invited ${invitedCount}. Sign in with Google/Email to view invoices, stock, and WhatsApp orders.`,
+    [activeCount, invitedCount],
+  );
 
   const handleAdd = () => {
     if (!form.name || !form.email) return;
@@ -60,6 +68,19 @@ export const Team: React.FC = () => {
             <span>{activeCount} active · {team.length} total</span>
           </div>
         </div>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        {[{ label: 'Invited', value: invitedCount, hint: 'Send WhatsApp invites', color: 'bg-amber-50 text-amber-700' }, { label: 'Google SSO', value: googleUsers, hint: 'Using Google login', color: 'bg-emerald-50 text-emerald-700' }, { label: 'Team size', value: team.length, hint: 'All branches', color: 'bg-slate-50 text-slate-700' }].map((card) => (
+          <div key={card.label} className="rounded-2xl border border-slate-200 bg-white p-4 flex items-center justify-between">
+            <div>
+              <p className="text-xs uppercase tracking-wide text-slate-500">{card.label}</p>
+              <p className="text-2xl font-bold text-slate-900">{card.value}</p>
+              <p className="text-xs text-slate-500">{card.hint}</p>
+            </div>
+            <span className={`text-xs font-semibold px-3 py-1 rounded-full ${card.color}`}>{card.label}</span>
+          </div>
+        ))}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
@@ -186,6 +207,14 @@ export const Team: React.FC = () => {
             >
               Save & send invite
             </button>
+            <a
+              href={`https://wa.me/?text=${encodeURIComponent(broadcastText)}`}
+              target="_blank"
+              rel="noreferrer"
+              className="w-full inline-flex items-center justify-center gap-2 text-emerald-700 bg-emerald-50 hover:bg-emerald-100 rounded-xl py-2 font-semibold"
+            >
+              <MessageCircle size={16} /> Broadcast access update
+            </a>
           </div>
         </div>
       </div>

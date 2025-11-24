@@ -1,6 +1,6 @@
 
-import { Product, Customer, Invoice, Expense, StockLog, TeamMember } from '../types';
-import { INITIAL_PRODUCTS, INITIAL_CUSTOMERS, INITIAL_EXPENSES, INITIAL_INVOICES, INITIAL_TEAM } from '../constants';
+import { Product, Customer, Invoice, Expense, StockLog, TeamMember, AdminSettings, UserProfile } from '../types';
+import { DEFAULT_ADMIN_SETTINGS, INITIAL_PRODUCTS, INITIAL_CUSTOMERS, INITIAL_EXPENSES, INITIAL_INVOICES, INITIAL_TEAM } from '../constants';
 
 const KEYS = {
   PRODUCTS: 'evw_products',
@@ -9,6 +9,8 @@ const KEYS = {
   EXPENSES: 'evw_expenses',
   STOCK_LOGS: 'evw_stock_logs',
   TEAM: 'evw_team',
+  SETTINGS: 'evw_admin_settings',
+  USER: 'evw_user_profile',
 };
 
 // Helper to load or initialize
@@ -41,6 +43,18 @@ export const StorageService = {
 
   getTeamMembers: () => load<TeamMember[]>(KEYS.TEAM, INITIAL_TEAM),
   saveTeamMembers: (team: TeamMember[]) => save(KEYS.TEAM, team),
+
+  getSettings: () => load<AdminSettings>(KEYS.SETTINGS, DEFAULT_ADMIN_SETTINGS),
+  saveSettings: (settings: AdminSettings) => save(KEYS.SETTINGS, settings),
+
+  getUserProfile: () => load<UserProfile | null>(KEYS.USER, null),
+  saveUserProfile: (profile: UserProfile | null) => {
+    if (!profile) {
+      localStorage.removeItem(KEYS.USER);
+    } else {
+      save(KEYS.USER, profile);
+    }
+  },
 
   getStockLogs: () => load<StockLog[]>(KEYS.STOCK_LOGS, []),
   
