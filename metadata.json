@@ -1,0 +1,7 @@
+{
+  "name": "EVW Cloud ERP",
+  "description": "Comprehensive enterprise resource planning system for EVW Vape Wholesale & Retail, featuring inventory management, POS, invoicing, and AI-driven insights.",
+  "requestFramePermissions": [
+    "camera"
+  ]
+}
