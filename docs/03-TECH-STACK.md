@@ -812,8 +812,8 @@ All client-side, lightweight, free.
     "format": "prettier --write \"src/**/*.{ts,tsx,json,css,md}\""
   },
   "dependencies": {
-    "react": "^19.2.0",
-    "react-dom": "^19.2.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
     "@supabase/supabase-js": "^2.39.0",
     "zustand": "^4.4.7",
     "@tanstack/react-query": "^5.17.9",

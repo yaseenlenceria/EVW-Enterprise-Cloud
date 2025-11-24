@@ -74,7 +74,7 @@ EVW Cloud ERP is a comprehensive cloud-based Enterprise Resource Planning system
 ### Frontend Stack
 | Technology | Version | Purpose |
 |------------|---------|---------|
-| **React** | 19.2.0 | UI framework for building interactive interfaces |
+| **React** | 18.3.1 | UI framework for building interactive interfaces |
 | **TypeScript** | 5.8.2 | Type safety and better developer experience |
 | **Vite** | 6.2.0 | Fast build tool and dev server |
 | **TailwindCSS** | Latest | Utility-first CSS framework for rapid UI development |
