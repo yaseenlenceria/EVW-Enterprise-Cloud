@@ -7,13 +7,14 @@ import { POS } from './components/POS';
 import { Expenses } from './components/Expenses';
 import { Invoice } from './types';
 import { StorageService } from './services/storage';
-import { InvoiceView } from './components/InvoiceView';
+import { InvoiceView, generateWhatsAppLink } from './components/InvoiceView';
 import { CustomerList } from './components/CustomerList';
 import { LoginScreen } from './components/Login';
+import { Team } from './components/Team';
 
 export default function App() {
   const [user, setUser] = useState<{ name: string; email: string; role: string } | null>(null);
-  const [activeTab, setActiveTab] = useState('dashboard');
+  const [activeTab, setActiveTab] = useState(() => localStorage.getItem('evw:activeTab') || 'dashboard');
   const [viewInvoice, setViewInvoice] = useState<Invoice | null>(null);
 
   useEffect(() => {
@@ -27,6 +28,12 @@ export default function App() {
     setUser(profile);
     localStorage.setItem('evw:user', JSON.stringify(profile));
   };
+
+  useEffect(() => {
+    if (user) {
+      localStorage.setItem('evw:activeTab', activeTab);
+    }
+  }, [activeTab, user]);
 
   const handleLogout = () => {
     setUser(null);
@@ -52,6 +59,7 @@ export default function App() {
       case 'pos': return <POS />;
       case 'customers': return <CustomerList />;
       case 'expenses': return <Expenses />;
+      case 'users': return <Team />;
       case 'invoices': return (
         <div>
             <h2 className="text-2xl font-bold text-slate-800 mb-6">Invoice History</h2>
@@ -63,7 +71,7 @@ export default function App() {
                             <th className="px-6 py-4">Date</th>
                             <th className="px-6 py-4">Customer</th>
                             <th className="px-6 py-4">Amount</th>
-                            <th className="px-6 py-4">Actions</th>
+                            <th className="px-6 py-4 text-right">Actions</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100">
@@ -73,13 +81,21 @@ export default function App() {
                                 <td className="px-6 py-4">{new Date(inv.date).toLocaleDateString()}</td>
                                 <td className="px-6 py-4">{inv.customerName}</td>
                                 <td className="px-6 py-4 font-medium">Rs. {inv.total.toLocaleString()}</td>
-                                <td className="px-6 py-4">
-                                    <button 
-                                        onClick={() => setViewInvoice(inv)} 
-                                        className="text-emerald-600 hover:underline"
+                                <td className="px-6 py-4 text-right space-x-3">
+                                    <button
+                                      onClick={() => setViewInvoice(inv)}
+                                      className="text-emerald-600 hover:underline font-semibold"
                                     >
-                                        View
+                                      View
                                     </button>
+                                    <a
+                                      href={generateWhatsAppLink(inv)}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                      className="text-emerald-700 hover:text-emerald-800 font-semibold"
+                                    >
+                                      WhatsApp
+                                    </a>
                                 </td>
                             </tr>
                         ))}

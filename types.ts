@@ -74,3 +74,15 @@ export type DashboardStats = {
   netIncome: number;
   lowStockCount: number;
 };
+
+export type TeamMember = {
+  id: string;
+  name: string;
+  email: string;
+  phone?: string;
+  role: 'Owner' | 'Manager' | 'Cashier' | 'Auditor';
+  location: string;
+  status: 'Active' | 'Invited' | 'Suspended';
+  authProvider: 'Google' | 'Email';
+  lastLogin?: string;
+};

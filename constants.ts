@@ -1,4 +1,4 @@
-import { Product, Customer, Expense, Invoice } from './types';
+import { Product, Customer, Expense, Invoice, TeamMember } from './types';
 
 export const COMPANY_DETAILS = {
   name: 'EVW VAPE WHOLESALE',
@@ -92,6 +92,39 @@ export const INITIAL_EXPENSES: Expense[] = [
 ];
 
 export const INITIAL_INVOICES: Invoice[] = [];
+
+export const INITIAL_TEAM: TeamMember[] = [
+  {
+    id: 'u1',
+    name: 'Ayesha Khan',
+    email: 'ayesha@evw.pk',
+    role: 'Owner',
+    location: 'Karachi, PK',
+    status: 'Active',
+    authProvider: 'Google',
+    lastLogin: new Date().toISOString(),
+    phone: '+92 300 1112233',
+  },
+  {
+    id: 'u2',
+    name: 'Bilal Sheikh',
+    email: 'bilal@evw.pk',
+    role: 'Manager',
+    location: 'Lahore, PK',
+    status: 'Active',
+    authProvider: 'Email',
+    lastLogin: new Date().toISOString(),
+  },
+  {
+    id: 'u3',
+    name: 'Sara Aziz',
+    email: 'sara@evw.pk',
+    role: 'Cashier',
+    location: 'Islamabad, PK',
+    status: 'Invited',
+    authProvider: 'Google',
+  },
+];
 
 export const CATEGORIES = ['E-Liquid', 'Nic Salt', 'Disposable', 'Device', 'Pod', 'Coil', 'Accessory'];
 export const BRANDS = ['VGod', 'Tokyo', 'Pod Salt', 'Juice Head', 'Skwezed', 'GeekVape', 'Vaporesso', 'Uwell'];

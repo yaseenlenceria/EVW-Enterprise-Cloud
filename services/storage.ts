@@ -1,6 +1,6 @@
 
-import { Product, Customer, Invoice, Expense, StockLog } from '../types';
-import { INITIAL_PRODUCTS, INITIAL_CUSTOMERS, INITIAL_EXPENSES, INITIAL_INVOICES } from '../constants';
+import { Product, Customer, Invoice, Expense, StockLog, TeamMember } from '../types';
+import { INITIAL_PRODUCTS, INITIAL_CUSTOMERS, INITIAL_EXPENSES, INITIAL_INVOICES, INITIAL_TEAM } from '../constants';
 
 const KEYS = {
   PRODUCTS: 'evw_products',
@@ -8,6 +8,7 @@ const KEYS = {
   INVOICES: 'evw_invoices',
   EXPENSES: 'evw_expenses',
   STOCK_LOGS: 'evw_stock_logs',
+  TEAM: 'evw_team',
 };
 
 // Helper to load or initialize
@@ -38,12 +39,21 @@ export const StorageService = {
   getExpenses: () => load<Expense[]>(KEYS.EXPENSES, INITIAL_EXPENSES),
   saveExpenses: (expenses: Expense[]) => save(KEYS.EXPENSES, expenses),
 
+  getTeamMembers: () => load<TeamMember[]>(KEYS.TEAM, INITIAL_TEAM),
+  saveTeamMembers: (team: TeamMember[]) => save(KEYS.TEAM, team),
+
   getStockLogs: () => load<StockLog[]>(KEYS.STOCK_LOGS, []),
   
   addExpense: (expense: Expense) => {
     const expenses = StorageService.getExpenses();
     expenses.unshift(expense);
     save(KEYS.EXPENSES, expenses);
+  },
+
+  addTeamMember: (member: TeamMember) => {
+    const team = StorageService.getTeamMembers();
+    team.unshift(member);
+    save(KEYS.TEAM, team);
   },
 
   // Business Logic Simulations
